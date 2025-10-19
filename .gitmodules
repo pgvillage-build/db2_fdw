@@ -1,0 +1,3 @@
+[submodule "db2_fdw"]
+	path = db2_fdw
+	url = https://github.com/wolfgangbrandl/db2_fdw.git
