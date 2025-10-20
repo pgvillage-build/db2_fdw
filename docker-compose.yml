@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   builder:
-    build: .
+    build:
+      context: .
+      args:
+        - PGVERSION=${PGVERSION}
     platform: linux/amd64
     volumes:
       - ./:/host
