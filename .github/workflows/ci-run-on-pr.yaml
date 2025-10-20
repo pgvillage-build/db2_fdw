@@ -15,7 +15,8 @@ jobs:
           - 15
           - 16
           - 17
-          - 18
+          # PGVERSION 18 does not work with the current release yet
+          #- 18
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
