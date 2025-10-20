@@ -1,0 +1,57 @@
+name: Build and add binaries to release
+on:
+  release:
+    types:
+      - published
+
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  builder_images:
+    strategy:
+      matrix:
+        pgversion:
+          - 14
+          - 15
+          - 16
+          - 17
+          # PGVERSION 18 does not work with the current release yet
+          #- 18
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: update to docker-compose v2
+        run: |
+          sudo apt-get install -y curl
+          sudo curl -SL https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: create rpms folder as required
+        run: |
+          mkdir -p rpms
+          chmod 777 rpms
+
+      - name: build rpm
+        run: |
+          docker-compose up builder --exit-code-from builder
+        env:
+          PGVERSION: ${{ matrix.pgversion }}
+
+      - name: sign rpm
+        run: |
+          docker-compose up rpmsigner --exit-code-from rpmsigner
+        env:
+          GPG_PASSPHRASE: '${{ secrets.GPG_PASSPHRASE }}'
+          GPG_KEY_B64: '${{ secrets.GPG_KEY_B64 }}'
+
+      - name: Add rpm to release
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            rpms/*
