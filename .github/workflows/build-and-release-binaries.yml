@@ -9,6 +9,9 @@ env:
 
 jobs:
   builder_images:
+    permissions:
+      contents: write
+      pull-requests: write
     strategy:
       matrix:
         pgversion:
