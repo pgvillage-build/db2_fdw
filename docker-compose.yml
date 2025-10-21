@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   builder:
+    image: builder
     build:
       context: .
       args:
@@ -10,3 +11,12 @@ services:
     volumes:
       - ./:/host
     command: /host/scripts/build_rpm.sh
+  rpmsigner:
+    image: builder
+    command:
+      - /host/scripts/sign_rpms.sh
+    volumes:
+      - ./:/host
+    environment:
+      - GPG_PASSPHRASE
+      - GPG_KEY_B64

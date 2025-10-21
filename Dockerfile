@@ -1,13 +1,25 @@
-FROM icr.io/db2_community/db2
+FROM --platform=${BUILDPLATFORM} icr.io/db2_community/db2 AS builder
+
+
+FROM rockylinux:9
 ARG PGVERSION
 ENV PGVERSION=${PGVERSION}
 ENV LICENSE=accept
 ENV DB2INST1_PASSWORD=testpwd
 ENV DBNAME=test
 ENV DB2_HOME=/opt/ibm/db2/V12.1
-#RUN   dnf erase -y ksh && \
-#      dnf update -y && \
-RUN   dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
+
+COPY --from=builder /opt/ibm/db2/V12.1/include /opt/ibm/db2/V12.1/include
+COPY --from=builder /opt/ibm/db2/V12.1/lib64 /opt/ibm/db2/V12.1/lib64
+COPY --from=builder /opt/ibm/db2/V12.1/bin /opt/ibm/db2/V12.1/bin
+
+RUN   dnf install -y epel-release && \
+      dnf install 'dnf-command(config-manager)' && \
+      dnf config-manager --enable crb && \
+			# See https://forums.rockylinux.org/t/status-code-404-on-mirrors-upon-dnf-update/3204/6
+			find /etc/yum.repos.d -name "Rocky-*.repo" -exec sed -i 's/^mirrorlist=/#&/' {} \; -exec sed -i '/^#baseurl=/s/^#//' {} \; && \
+      dnf update -y && \
+      dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
       dnf -qy module disable postgresql && \
-      dnf install -y postgresql${PGVERSION}-server postgresql${PGVERSION}-devel git rpm-build
+      dnf install -y postgresql${PGVERSION}-server postgresql${PGVERSION}-devel git rpm-build rpm-sign
 ENTRYPOINT []
