@@ -1,14 +1,16 @@
 %global _prefix /usr/local
-Summary: PostgreSQL %pgversion db2 foreign data wrapper
-Name: postgresql%pgversion-db2_fdw
-Version: %fdw_version
+Summary: PostgreSQL %{pgversion} db2 foreign data wrapper
+Name: postgresql%{pgversion}-db2_fdw
+Version: %{fdw_version}
 Release: 1%{?dist}
 License: PostgreSQL License
 Group: Applications/Databases
 Url: https://github.com/wolfgangbrandl/db2_fdw
 %undefine _disable_source_fetch
 BuildArch: x86_64
-Requires: postgresql$pgversion
+
+Requires: postgresql%{pgversion}-server
+%global __requires_exclude ^libdb2ci\\.so
 
 %description
 db2_fdw is a PostgreSQL extension that provides a Foreign Data Wrapper for easy and efficient
@@ -36,4 +38,4 @@ make
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/pgsql-%pgversion/*
+/usr/pgsql-%{pgversion}/*
