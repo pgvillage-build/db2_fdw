@@ -1,7 +1,7 @@
 %global _prefix /usr/local
-Summary: PostgreSQL %pgversion db2 foreign data wrapper
-Name: postgresql%pgversion-db2_fdw
-Version: %fdw_version
+Summary: PostgreSQL %{pgversion} db2 foreign data wrapper
+Name: postgresql%{pgversion}-db2_fdw
+Version: %{fdw_version}
 Release: 1%{?dist}
 License: PostgreSQL License
 Group: Applications/Databases
@@ -38,4 +38,4 @@ make
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/pgsql-%pgversion/*
+/usr/pgsql-%{pgversion}/*
