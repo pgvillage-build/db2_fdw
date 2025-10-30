@@ -11,6 +11,7 @@ BuildArch: x86_64
 
 Requires: postgresql%{pgversion}-server
 %global __requires_exclude ^libdb2\\.so
+%global __requires_exclude ^libdb2ci\\.so
 
 %description
 db2_fdw is a PostgreSQL extension that provides a Foreign Data Wrapper for easy and efficient
