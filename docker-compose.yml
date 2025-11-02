@@ -12,7 +12,7 @@ services:
     image: builder
     platform: linux/amd64
     volumes:
-      - ./:/host
+      - ./:/host:z
     command:
       - /bin/bash
       - -c
@@ -25,14 +25,14 @@ services:
         - PGVERSION=${PGVERSION}
     platform: linux/amd64
     volumes:
-      - ./:/host
+      - ./:/host:z
     command: /host/scripts/build_rpm.sh
   rpmsigner:
     image: builder
     command:
       - /host/scripts/sign_rpms.sh
     volumes:
-      - ./:/host
+      - ./:/host:z
     environment:
       - GPG_PASSPHRASE
       - GPG_KEY_B64
