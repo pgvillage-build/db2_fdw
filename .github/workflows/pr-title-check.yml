@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # A step-level condition, so the job reports a normal success in the merge queue
-      - uses: thehanimo/pr-title-checker@7fbfe05602bdd86f926d3fb3bccb6f3aed43bc70 # v1.4.3
+      - uses: thehanimo/pr-title-checker@b69bc3a841cf4e3cfef2d822625d8c90a588e9da # v2.0.0
         if: github.event_name != 'merge_group'
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
