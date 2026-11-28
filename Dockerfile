@@ -1,7 +1,7 @@
 FROM --platform=${BUILDPLATFORM} icr.io/db2_community/db2 AS builder
 
 
-FROM rockylinux:9
+FROM rockylinux:10
 ARG PGVERSION
 ENV PGVERSION=${PGVERSION}
 ENV LICENSE=accept
